@@ -9,10 +9,14 @@ class ProductTransformer
 {
     public static function detail(Product $data)
     {
+        $categories = $data->categories ? $data->categories : null;
+        $images = $data->images ? $data->images : null;
         return [
             'id' => $data->id,
             'name' => $data->name,
             'description' => $data->description,
+            "categories" => $categories ? CategoryTransformer::all($categories) : [],
+            "images" => $images ? ImageTransformer::all($images) : [],
         ];
     }
 

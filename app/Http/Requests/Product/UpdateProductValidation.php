@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 class UpdateProductValidation extends Validation
 {
     public static $rules = [
-        "id" => ['required', 'string', 'max:255', 'exists:mysql.product,id'],
+        "id" => ['required', 'numeric', 'exists:mysql.product,id'],
+        'categories' => ['required', 'array'],
+        "categories.*" => ['required', 'numeric', 'exists:mysql.category,id'],
     ];
 
     public function __construct(Request $request, array $relations = [])

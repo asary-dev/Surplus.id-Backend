@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class GetOneProductByIDValidation extends Validation
 {
     public static $rules = [
-        "id" => ['required', 'string', 'max:255', 'exists:mysql.product,id'],
+        "id" => ['required', 'numeric', 'exists:mysql.product,id'],
     ];
 
     public function __construct(Request $request, array $relations = [])

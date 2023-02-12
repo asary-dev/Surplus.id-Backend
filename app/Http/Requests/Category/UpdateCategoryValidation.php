@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class UpdateCategoryValidation extends Validation
 {
     public static $rules = [
-        "id" => ['required', 'string', 'max:255', 'exists:mysql.category,id'],
+        "id" => ['required', 'numeric', 'exists:mysql.category,id'],
     ];
 
     public function __construct(Request $request, array $relations = [])

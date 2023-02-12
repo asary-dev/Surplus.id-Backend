@@ -18,7 +18,7 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function index(Request $request)
+    public function getAll(Request $request)
     {
         try {
             $data = $this->productService->getAllCategories($request);
@@ -34,7 +34,7 @@ class ProductController extends Controller
         }
     }
 
-    public function show(Request $request, $id)
+    public function getOneByID(Request $request, $id)
     {
         try {
             $validation = new GetOneProductByIDValidation($request);
@@ -60,7 +60,7 @@ class ProductController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function create(Request $request)
     {
         try {
             $validation = new CreateProductValidation($request);
@@ -112,7 +112,7 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function delete(Request $request, $id)
     {
         try {
             $validation = new GetOneProductByIDValidation($request);

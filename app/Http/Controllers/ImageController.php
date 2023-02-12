@@ -2,29 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Category\CategoryGetOneByIDValidation;
-use App\Http\Requests\Category\CreateCategoryValidation;
-use App\Http\Requests\Category\UpdateCategoryValidation;
-use App\Services\CategoryServices;
-use App\Transformer\CategoryTransformer;
+use App\Http\Requests\Image\CreateImageValidation;
+use App\Http\Requests\Image\GetAllImageByProductId;
+use App\Http\Requests\Image\GetOneImageByIDValidation;
+use App\Http\Requests\Image\UpdateImageValidation;
+use App\Services\ImageServices;
+use App\Transformer\ImageTransformer;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class ImageController extends Controller
 {
-    protected $categoryService;
+    protected $imageService;
 
-    public function __construct(CategoryServices $categoryService)
+    public function __construct(ImageServices $imageService)
     {
-        $this->categoryService = $categoryService;
+        $this->imageService = $imageService;
     }
 
-    public function getAll(Request $request)
+    public function getAll(Request $request, $product_id)
     {
         try {
-            $data = $this->categoryService->getAllCategories($request);
+            // also can pass filters from queries
+            $validation = new GetAllImageByProductId($request);
+            if (!$validation->status) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validation->message,
+                ], 400);
+            }
+
+            $data = $this->imageService->getAllImagesByProductID($product_id);
             return response()->json([
                 'status' => true,
-                'data' => CategoryTransformer::all($data),
+                'data' => ImageTransformer::all($data),
             ], 200);
         } catch (\Throwable$th) {
             return response()->json([
@@ -34,10 +44,10 @@ class CategoryController extends Controller
         }
     }
 
-    public function getOneByID(Request $request, $id)
+    public function getOneByID(Request $request, $product_id, $id)
     {
         try {
-            $validation = new CategoryGetOneByIDValidation($request);
+            $validation = new GetOneImageByIDValidation($request);
             if (!$validation->status) {
                 return response()->json([
                     'status' => false,
@@ -45,11 +55,11 @@ class CategoryController extends Controller
                 ], 400);
             }
 
-            $data = $this->categoryService->getOneById($id);
+            $data = $this->imageService->getOneById($id);
 
             return response()->json([
                 'status' => true,
-                'data' => CategoryTransformer::detail($data),
+                'data' => ImageTransformer::detail($data),
             ], 200);
 
         } catch (\Throwable$th) {
@@ -60,10 +70,10 @@ class CategoryController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $product_id)
     {
         try {
-            $validation = new CreateCategoryValidation($request);
+            $validation = new CreateImageValidation($request);
             if (!$validation->status) {
                 return response()->json([
                     'status' => false,
@@ -71,12 +81,12 @@ class CategoryController extends Controller
                 ], 400);
             }
 
-            $category = $this->categoryService->saveCategory($validation->data);
+            $image = $this->imageService->saveImage($validation->data);
 
             return response()->json([
                 'status' => true,
                 'message' => 'Successfully created.',
-                'data' => CategoryTransformer::getByField($category, 'id'),
+                'data' => ImageTransformer::getByField($image, 'id'),
             ], 200);
         } catch (\Throwable$th) {
             return response()->json([
@@ -87,10 +97,10 @@ class CategoryController extends Controller
 
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $product_id, $id)
     {
         try {
-            $validation = new UpdateCategoryValidation($request);
+            $validation = new UpdateImageValidation($request);
             if (!$validation->status) {
                 return response()->json([
                     'status' => false,
@@ -98,7 +108,7 @@ class CategoryController extends Controller
                 ], 400);
             }
 
-            $this->categoryService->updateCategory($validation->data, $id);
+            $this->imageService->updateImage($validation->data, $id);
 
             return response()->json([
                 'status' => true,
@@ -112,10 +122,10 @@ class CategoryController extends Controller
         }
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request, $product_id, $id)
     {
         try {
-            $validation = new CategoryGetOneByIDValidation($request);
+            $validation = new GetOneImageByIDValidation($request);
             if (!$validation->status) {
                 return response()->json([
                     'status' => false,
@@ -123,7 +133,7 @@ class CategoryController extends Controller
                 ], 400);
             }
 
-            $this->categoryService->deleteCategory($id);
+            $this->imageService->deleteImage($id, $product_id);
 
             return response()->json([
                 'status' => true,

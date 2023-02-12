@@ -26,4 +26,24 @@ class Product extends Model
             'category_id',
         );
     }
+
+    public function images()
+    {
+        return $this->belongsToMany(
+            Image::class,
+            'product_image',
+            'product_id',
+            'image_id',
+        );
+    }
+
+    public function deleteCategories()
+    {
+        $this->categories()->delete();
+    }
+
+    public function deleteImages()
+    {
+        $this->categories()->delete();
+    }
 }
