@@ -20,8 +20,8 @@ return new class extends Migration
             $table->index('product_id');
             $table->index('image_id');
 
-            $table->foreign('product_id')->references('id')->on('product');
-            $table->foreign('image_id')->references('id')->on('image');
+            $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');;
+            $table->foreign('image_id')->references('id')->on('image')->onDelete('cascade');
         });
     }
 
