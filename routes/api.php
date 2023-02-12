@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
  */
 Route::apiResource('category', CategoryController::class)->parameters(['category' => 'id']);
+Route::apiResource('product', ProductController::class)->parameters(['product' => 'id']);
 
 //  Inflexible
 // Route::resources([
